@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f8e9e9">
+<title>A little something for you</title>
+<style>
+
+    :root {
+      --ink: #49343b;
+      --muted: #8d7079;
+      --rose: #a95773;
+      --paper: #fffaf8;
+      --line: #f0dce1;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px 16px;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at 12% 10%, #f7dce5 0, transparent 28%),
+        radial-gradient(circle at 90% 85%, #f5e2d7 0, transparent 30%),
+        linear-gradient(145deg, #fff8f5, #f8e9e9 55%, #f8eee5);
+    }
+    .page {
+      width: min(520px, 100%);
+      text-align: center;
+      padding: 42px 24px 38px;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: rgba(255,250,248,.88);
+      box-shadow: 0 14px 40px rgba(111,65,79,.08);
+    }
+    .eyebrow {
+      color: var(--muted);
+      font: 11px/1.6 Arial, sans-serif;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(36px, 8vw, 52px);
+      font-weight: normal;
+      line-height: 1.08;
+    }
+    h1 span { color: var(--rose); font-style: italic; }
+    .message {
+      max-width: 360px;
+      margin: 0 auto;
+      color: #80646d;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .timer {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 9px;
+      margin: 30px 0 18px;
+    }
+    .unit {
+      padding: 16px 5px 13px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: #fffdfb;
+    }
+    .value {
+      display: block;
+      color: var(--rose);
+      font-size: clamp(27px, 7vw, 38px);
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+    .label {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font: 9px Arial, sans-serif;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .date {
+      margin-top: 22px;
+      color: #9b7d85;
+      font: 11px/1.6 Arial, sans-serif;
+      letter-spacing: .1em;
+    }
+    .footer {
+      margin-top: 28px;
+      color: #a58b92;
+      font: 10px Arial, sans-serif;
+      letter-spacing: .16em;
+    }
+    @media (max-width: 360px) {
+      .page { padding: 34px 14px; }
+      .timer { gap: 5px; }
+      .unit { padding: 13px 2px 11px; }
+      .label { font-size: 8px; }
+    }
+  
+  #surprise { display: none; }
+  #countdown-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px 16px;
+    background:
+      radial-gradient(circle at 12% 10%, #f7dce5 0, transparent 28%),
+      radial-gradient(circle at 90% 85%, #f5e2d7 0, transparent 30%),
+      linear-gradient(145deg, #fff8f5, #f8e9e9 55%, #f8eee5);
+  }
+</style>
+<style id="surprise-styles">
+
+  :root {
+    --ink: #49343b;
+    --muted: #8d7079;
+    --rose: #c87991;
+    --rose-dark: #a95773;
+    --paper: #fffaf8;
+    --line: #f0dce1;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--ink);
+    font-family: Georgia, "Times New Roman", serif;
+    background:
+      radial-gradient(circle at 12% 10%, #f7dce5 0, transparent 28%),
+      radial-gradient(circle at 90% 85%, #f5e2d7 0, transparent 30%),
+      linear-gradient(145deg, #fff8f5, #f8e9e9 55%, #f8eee5);
+    padding: 28px 16px 48px;
+  }
+  .page { width: min(760px, 100%); margin: 0 auto; }
+  .topline {
+    text-align: center; color: var(--rose-dark); letter-spacing: .22em;
+    text-transform: uppercase; font: 11px/1.5 Arial, sans-serif;
+  }
+  header { text-align: center; padding: 28px 10px 24px; }
+  .eyebrow { color: var(--muted); font: 12px Arial, sans-serif; letter-spacing: .12em; }
+  h1 { font-size: clamp(38px, 8vw, 62px); font-weight: normal; line-height: 1.02; margin: 12px 0 10px; }
+  h1 span { color: var(--rose-dark); font-style: italic; }
+  .subtitle { color: var(--muted); font-size: 16px; line-height: 1.6; margin: 0 auto; max-width: 440px; }
+  .period {
+    display: inline-block; margin-top: 17px; padding: 8px 13px;
+    border: 1px solid #e9cbd4; border-radius: 30px;
+    color: #986275; background: #fff9f8; font: 11px Arial, sans-serif;
+    letter-spacing: .06em;
+  }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+  .stat {
+    min-height: 154px; padding: 20px 17px 17px; text-align: center;
+    border: 1px solid var(--line); border-radius: 20px;
+    background: rgba(255,250,248,.88); box-shadow: 0 8px 24px rgba(111,65,79,.06);
+    animation: rise .7s both;
+  }
+  .stat:nth-child(2) { animation-delay: .08s; }
+  .stat:nth-child(3) { animation-delay: .16s; }
+  .stat:nth-child(4) { animation-delay: .24s; }
+  .stat:nth-child(5) { animation-delay: .32s; }
+  .stat.full { grid-column: 1 / -1; min-height: 138px; background: linear-gradient(135deg, #fffaf8, #f9e8ed); }
+  .symbol { font-size: 23px; margin-bottom: 8px; }
+  .number { color: var(--rose-dark); font-size: clamp(38px, 8vw, 48px); line-height: 1; }
+  .label { margin-top: 9px; font: 11px Arial, sans-serif; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); }
+  .tiny { margin-top: 8px; color: #9b7d85; font-size: 13px; font-style: italic; line-height: 1.4; }
+  .note {
+    margin: 18px 0 0; padding: 13px 16px; text-align: center;
+    border-radius: 14px; background: rgba(255,250,248,.68);
+    color: #8d7079; font: 12px/1.6 Arial, sans-serif;
+    border: 1px dashed #e7cbd3;
+  }
+  .closing {
+    margin: 30px auto 0; max-width: 570px; text-align: center;
+    padding: 26px 18px 20px; border-top: 1px solid #e9d2d8;
+  }
+  .closing h2 { font-size: 28px; font-weight: normal; margin: 0 0 12px; }
+  .closing p { font-size: 16px; line-height: 1.8; color: #765b64; margin: 0; }
+  .signature { margin-top: 17px; color: var(--rose-dark); font-style: italic; font-size: 18px; }
+  .footer { text-align: center; margin-top: 24px; color: #a58b92; font: 10px Arial, sans-serif; letter-spacing: .16em; }
+  .heart { color: var(--rose); }
+  @keyframes rise { from { opacity: 0; transform: translateY(13px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 420px) {
+    body { padding: 18px 12px 36px; }
+    .stat { min-height: 145px; padding: 17px 10px; }
+    .label { font-size: 10px; letter-spacing: .08em; }
+  }
+
+</style>
+</head>
+<body>
+<div id="countdown-page">
+
+  <main class="page">
+    <div class="eyebrow">Something is waiting for you</div>
+    <h1>Just a little <span>longer.</span></h1>
+    <p class="message">A few more moments. Then, a little something made just for u.</p>
+
+    <section class="timer" aria-label="Countdown">
+      <div class="unit"><span class="value" id="days">00</span><span class="label">Days</span></div>
+      <div class="unit"><span class="value" id="hours">00</span><span class="label">Hours</span></div>
+      <div class="unit"><span class="value" id="minutes">00</span><span class="label">Minutes</span></div>
+      <div class="unit"><span class="value" id="seconds">00</span><span class="label">Seconds</span></div>
+    </section>
+
+    <div class="date">NOVEMBER 3 · 12:00 AM · IST</div>
+    <div class="footer">MADE WITH LOVE · JUST FOR YOU</div>
+  </main>
+
+  
+</div>
+<div id="surprise">
+
+<main class="page">
+  <div class="topline">A very serious report · made with love</div>
+  <header>
+    <div class="eyebrow">A LITTLE LOOK AT</div>
+    <h1>Us, by the <span>numbers.</span></h1>
+    <p class="subtitle">Some moments were counted. Some feelings are impossible to put into numbers.</p>
+    <div class="period">OUR LITTLE STATISTICS ♡</div>
+  </header>
+
+  <section class="grid" aria-label="Our relationship statistics">
+    <article class="stat">
+      <div class="symbol">🌷</div>
+      <div class="number" data-count="0">0</div>
+      <div class="label">Flowers given</div>
+      <div class="tiny">I'm sorry about this one.</div>
+    </article>
+    <article class="stat">
+      <div class="symbol">💋</div>
+      <div class="number" data-count="28">28</div>
+      <div class="label">Kisses shared</div>
+      <div class="tiny">And still, not enough.</div>
+    </article>
+    <article class="stat">
+      <div class="symbol">🤝</div>
+      <div class="number" data-count="117">117</div>
+      <div class="label">Times we held hands</div>
+      <div class="tiny">A favourite kind of moment.</div>
+    </article>
+    <article class="stat">
+      <div class="symbol">💌</div>
+      <div class="number" data-count="367">367</div>
+      <div class="label">“I love you”s</div>
+      <div class="tiny">And I hope we never get tired of saying it.</div>
+    </article>
+    <article class="stat full">
+      <div class="symbol">👀</div>
+      <div class="number" data-count="80">80</div>
+      <div class="label">Times our eyes met</div>
+      <div class="tiny">Some moments don't really need words, do they?</div>
+    </article>
+    <article class="stat">
+      <div class="symbol">🚌</div>
+      <div class="number" data-count="52">52</div>
+      <div class="label">Times we sat together in the bus</div>
+      <div class="tiny">Even the usual rides felt different with u.</div>
+    </article>
+    <article class="stat">
+      <div class="symbol">∞</div>
+      <div class="number">∞</div>
+      <div class="label">Laughter exchanged</div>
+      <div class="tiny">And somehow, there's always more to come.</div>
+    </article>
+    <article class="stat">
+      <div class="symbol">∞</div>
+      <div class="number">∞</div>
+      <div class="label">Steps walked together</div>
+      <div class="tiny">No matter the distance, the best part was walking side by side.</div>
+    </article>
+    <article class="stat">
+      <div class="symbol">♡</div>
+      <div class="number" data-count="43">43</div>
+      <div class="label">Times we fed each other by hand</div>
+      <div class="tiny">Little gestures that meant a lot.</div>
+    </article>
+  </section>
+
+  <div class="note">A small note: these counts are from June onwards. ♡</div>
+
+  <section class="closing">
+    <h2>The little conclusion</h2>
+    <p>
+      Flowers: <strong>0</strong> — but I promise this count is going to surge now.
+      <br><br>
+      The rest? Just little reminders of moments we've shared.
+      And I hope there's so much more waiting for us.
+    </p>
+    <div class="signature">Made for you, with love. ♡</div>
+  </section>
+  <div class="footer">END OF REPORT · BEGINNING OF MORE MEMORIES</div>
+</main>
+<script>
+  // Count-up animation, with the final values still visible if motion is reduced.
+  const counters = document.querySelectorAll(".number");
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  counters.forEach((el) => {
+    const target = Number(el.dataset.count);
+    if (reduced) return;
+    el.textContent = "0";
+    const duration = 950;
+    const start = performance.now();
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = String(Math.round(target * eased));
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+</script>
+
+</div>
+<script>
+  // Launches November 3, 2026 at 12:00 AM India Standard Time.
+  const launchTime = new Date("2026-11-03T00:00:00+05:30").getTime();
+  const countdownPage = document.getElementById("countdown-page");
+  const surprisePage = document.getElementById("surprise");
+
+  function showSurprise() {
+    countdownPage.style.display = "none";
+    surprisePage.style.display = "block";
+    document.body.style.display = "block";
+    document.body.style.padding = "0";
+    document.body.style.minHeight = "100vh";
+    document.body.style.background = "linear-gradient(145deg, #fff8f5, #f8e9e9 55%, #f8eee5)";
+    document.body.style.color = "#49343b";
+
+  // Count-up animation, with the final values still visible if motion is reduced.
+  const counters = document.querySelectorAll(".number");
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  counters.forEach((el) => {
+    const target = Number(el.dataset.count);
+    if (reduced) return;
+    el.textContent = "0";
+    const duration = 950;
+    const start = performance.now();
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = String(Math.round(target * eased));
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+
+  }
+
+  function updateCountdown() {
+    const remaining = launchTime - Date.now();
+    if (remaining <= 0) {
+      showSurprise();
+      return;
+    }
+    const totalSeconds = Math.floor(remaining / 1000);
+    document.getElementById("days").textContent = String(Math.floor(totalSeconds / 86400)).padStart(2, "0");
+    document.getElementById("hours").textContent = String(Math.floor((totalSeconds % 86400) / 3600)).padStart(2, "0");
+    document.getElementById("minutes").textContent = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+    document.getElementById("seconds").textContent = String(totalSeconds % 60).padStart(2, "0");
+  }
+
+  if (Date.now() >= launchTime) {
+    showSurprise();
+  } else {
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  }
+</script>
+</body>
+</html>
